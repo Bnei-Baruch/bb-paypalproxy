@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension key="bb-paypalproxy" type="module">
+  <file>bb-paypalproxy</file>
+  <name>PayPal Proxy Payment Processor</name>
+  <description>PayPal Proxy Payment Processor - forwards all requests to PayPal_Standard</description>
+  <license>AGPL-3.0</license>
+  <maintainer>
+    <author>Gregory Shilin</author>
+    <email>gshilin@gmail.com</email>
+  </maintainer>
+  <releaseDate>2025-07-10</releaseDate>
+  <version>1.0</version>
+  <develStage>stable</develStage>
+  <compatibility>
+    <ver>5.74</ver>
+  </compatibility>
+  <comments>PayPal Proxy Payment Processor</comments>
+  <civix>
+    <namespace>CRM/Bbpaypalproxy</namespace>
+    <format>24.09.1</format>
+  </civix>
+  <mixins>
+    <mixin>menu-xml@1.0.0</mixin>
+    <mixin>smarty@1.0.3</mixin>
+  </mixins>
+  <classloader>
+    <psr0 prefix="CRM_" path="."/>
+    <psr4 prefix="Civi\" path="Civi"/>
+  </classloader>
+</extension>
