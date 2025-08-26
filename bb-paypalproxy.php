@@ -15,14 +15,14 @@ function bb_paypalproxy_civicrm_config(&$config) {
 function bb_paypalproxy_civicrm_install() {
     $params = array(
         'version' => 3,
-        'name' => 'PayPalProxy',
-        'title' => 'PayPal Proxy',
-        'description' => 'PayPal Proxy Payment Processor - forwards all requests to PayPal_Standard',
+        'name' => 'BbPayPalProxy',
+        'title' => 'BB PayPal Proxy',
+        'description' => 'BB PayPal Proxy Payment Processor - forwards all requests to PayPal_Standard',
         'class_name' => 'Payment_BbPayPalProxy',
         'billing_mode' => 'notify',
         'user_name_label' => 'Merchant Account Email',
         'password_label' => 'API Password',
-        'signature_label' => 'Target PayPal Processor ID',
+        'signature_label' => 'Target PayPal Processor',
         'url_site_default' => 'https://www.paypal.com/',
         'url_api_default' => 'https://api-3t.paypal.com/',
         'url_recur_default' => 'https://www.paypal.com/',
@@ -46,7 +46,7 @@ function bb_paypalproxy_civicrm_uninstall() {
     $params = array(
         'version' => 3,
         'sequential' => 1,
-        'name' => 'PayPalProxy',
+        'name' => 'BbPayPalProxy',
     );
     $result = civicrm_api('PaymentProcessorType', 'get', $params);
     if ($result["count"] == 1) {
@@ -57,6 +57,7 @@ function bb_paypalproxy_civicrm_uninstall() {
         );
         civicrm_api('PaymentProcessorType', 'delete', $params);
     }
+    _bb_paypalproxy_civix_civicrm_uninstall();
 }
 
 /**
@@ -77,13 +78,14 @@ function bb_paypalproxy_civicrm_disable() {
  * Implements hook_civicrm_upgrade().
  */
 function bb_paypalproxy_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
-    return;
+    return _bb_paypalproxy_civix_civicrm_upgrade($op, $queue);
 }
 
 /**
  * Implements hook_civicrm_managed().
  */
 function bb_paypalproxy_civicrm_managed(&$entities) {
+    _bb_paypalproxy_civix_civicrm_managed($entities);
 }
 
 /**
@@ -103,4 +105,3 @@ function bb_paypalproxy_civicrm_angularModules(&$angularModules) {
  */
 function bb_paypalproxy_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 }
-

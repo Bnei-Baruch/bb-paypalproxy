@@ -19,6 +19,7 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
         $this->_mode = $mode;
         $this->_paymentProcessor = $paymentProcessor;
         $this->_setParam('processorName', 'PayPal Proxy');
+        // DO NOT call parent::__construct() - CiviCRM payment processors don't do this
     }
 
     /**
@@ -92,9 +93,10 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
             $currencyName = 'ILS';
         }
         $params['currencyID'] = $currencyName;
+	$this->updateContributionCurrency($contributionID, $currencyName);
 
-	// Get the target PayPal processor ID from signature field
-	$targetProcessorId = $this->_paymentProcessor["signature"];
+        // Get the target PayPal processor ID from signature field
+        $targetProcessorId = $this->_paymentProcessor["signature"];
         try {
             // Get the target PayPal processor
             $targetProcessor = Civi\Payment\System::singleton()->getById($targetProcessorId);
@@ -110,6 +112,31 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
             CRM_Core_Error::debug_log_message("PayPal Proxy error: " . $e->getMessage());
             throw new PaymentProcessorException('Payment processing failed: ' . $e->getMessage(), 9006);
         }
+    }
+
+    private function updateContributionCurrency($contributionID, $currencyName) {
+	     try {
+		$contributions = \Civi\Api4\Contribution::get(false)
+			->addWhere('id', '=', $contributionID)
+			->execute();
+		    
+		if (count($contributions) === 0) {
+		    return;
+		}
+                try {
+			// Update status_id and custom field for all activities
+		    	\Civi\Api4\Contribution::update(false)
+				->addWhere('id', '=', $contributionID)
+				->addValue('currency', $currencyName)
+				->execute();
+
+		} catch (Exception $e) {
+			// Ignore error
+		}
+	    } catch (Exception $e) {
+		// Ignore error
+	    }
+
     }
 
     /**
@@ -182,5 +209,19 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
      */
     public function getPaymentTypeLabelTranslated() {
         return 'PayPal Proxy';
+    }
+
+    /**
+     * Does this payment processor support refund?
+     */
+    public function supportsRefund() {
+        return FALSE; // Proxy doesn't handle refunds directly
+    }
+
+    /**
+     * Can more than one transaction be processed at once?
+     */
+    protected function supportsMultipleConcurrentPayments() {
+        return TRUE;
     }
 }

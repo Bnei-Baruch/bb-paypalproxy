@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension key="bb-paypalproxy" type="module">
   <file>bb-paypalproxy</file>
-  <name>PayPal Proxy Payment Processor</name>
-  <description>PayPal Proxy Payment Processor - forwards all requests to PayPal_Standard</description>
+  <name>BB PayPal Proxy Payment Processor</name>
+  <description>PayPal Proxy Payment Processor - forwards all requests to a selected PayPal</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Gregory Shilin</author>
     <email>gshilin@gmail.com</email>
   </maintainer>
   <releaseDate>2025-07-10</releaseDate>
-  <version>1.0</version>
+  <version>1.1</version>
   <develStage>stable</develStage>
   <compatibility>
     <ver>5.74</ver>

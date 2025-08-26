@@ -1,0 +1,8 @@
+// Add manually
+CRM.api4('PaymentProcessorType', 'create', {
+  values: {"name":"BbPayPalProxy", "title":"BB PayPal Proxy", "class_name":"CRM_Core_Payment_BbPayPalProxy", "description":"BB PayPal Proxy Payment Processor - forwards all requests to PayPal_Standard", "billing_mode":4, "user_name_label":"Merchant Account Email", "is_recur":true, "payment_type":1, "password_label":"API Password", "signature_label":"Target PayPal Processor ID", "url_site_default":"https://www.paypal.com", "url_recur_default":"https://www.paypal.com", "url_button_default":"https://www.paypal.com", "url_api_default":"https://api-3t.paypal.com/", "url_site_test_default":"https://www.sandbox.paypal.com/", "url_recur_test_default":"https://www.sandbox.paypal.com/", "url_button_test_default":"https://www.sandbox.paypal.com/", "url_api_test_default":"https://api-3t.sandbox.paypal.com/"}
+}).then(function(results) {
+  console.log('SUCCESS', results);
+}, function(failure) {
+  console.log('FAILURE', failure);
+});
