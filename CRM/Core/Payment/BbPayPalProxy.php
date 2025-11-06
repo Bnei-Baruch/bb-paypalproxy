@@ -1,5 +1,7 @@
 <?php
 
+use Civi\Api4\PaymentProcessor;
+
 require_once 'CRM/Core/Payment.php';
 
 /**
@@ -15,7 +17,7 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
     /**
      * Constructor.
      */
-    public function __construct($mode, &$paymentProcessor) {
+    public function __construct(string $mode, &$paymentProcessor) {
         $this->_mode = $mode;
         $this->_paymentProcessor = $paymentProcessor;
         $this->_setParam('processorName', 'PayPal Proxy');
@@ -25,8 +27,8 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
     /**
      * This function checks to see if we have the right config values.
      */
-    public function checkConfig() {
-        $error = array();
+    public function checkConfig(): ?string {
+        $error = [];
 
         if (empty($this->_paymentProcessor["user_name"])) {
             $error[] = ts("PayPal Email is not set in the PayPal Proxy Payment Processor settings.");
@@ -37,10 +39,11 @@ class CRM_Core_Payment_BbPayPalProxy extends CRM_Core_Payment {
         } else {
             // Validate that the selected processor exists and is active
             try {
-                $targetProcessor = civicrm_api3('PaymentProcessor', 'getsingle', [
-                    'id' => $this->_paymentProcessor["signature"],
-                    'is_active' => 1
-                ]);
+                $targetProcessor = PaymentProcessor::get(false)
+                    ->addWhere('id', '=', $this->_paymentProcessor["signature"])
+                    ->addWhere('is_active', '=', 1)
+                    ->execute()
+                    ->single();
             } catch (Exception $e) {
                 $error[] = ts("Selected Target PayPal Processor (ID: %1) is not found or inactive.", [1 => $this->_paymentProcessor["signature"]]);
             }
